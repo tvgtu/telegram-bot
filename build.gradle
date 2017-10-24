@@ -1,0 +1,26 @@
+plugins {
+    id 'org.springframework.boot' version '1.5.8.RELEASE'
+}
+
+apply plugin: 'java'
+
+group = 'ru.tstu.telegram.bot'
+version = '0.1-SNAPSHOT'
+
+description = """telegram-bot"""
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    maven { url "https://jitpack.io" }
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'com.github.xabgesagtx', name: 'telegram-spring-boot-starter', version: '0.12'
+    compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'
+}
