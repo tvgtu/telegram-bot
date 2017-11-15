@@ -2,3 +2,12 @@ bot:
   token:
   username:
   payment-token:
+spring:
+  datasource:
+    url: jdbc:postgresql://telegram-db:5432/telebot
+    username: telebot
+    password: 123456
+    driver-class-name: org.postgresql.Driver
+liquibase:
+  enabled: true
+  change-log: classpath:/db/changelog/db.changelog-master.xml
