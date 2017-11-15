@@ -3,6 +3,7 @@ package ru.tstu.telegram.bot;
 import org.apache.commons.codec.binary.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.api.methods.AnswerPreCheckoutQuery;
@@ -15,6 +16,8 @@ import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
+import ru.tstu.telegram.dao.MessagesDAOService;
+import ru.tstu.telegram.model.TelegramMessage;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,6 +56,9 @@ public class TstuBot extends TelegramLongPollingBot {
         return username;
     }
 
+    @Autowired
+    private MessagesDAOService messagesDAOService;
+
     private SendInvoice buildInvoice(Integer chatId) {
         List<LabeledPrice> prices = new ArrayList<>();
         prices.add(new LabeledPrice("Coca Cola", 20000));
@@ -88,6 +94,15 @@ public class TstuBot extends TelegramLongPollingBot {
             return;
 
         Message message = update.getMessage();
+
+        Optional.ofNullable(message.getFrom()).ifPresent(user -> {
+            TelegramMessage m = new TelegramMessage();
+            m.setUserId(user.getId().toString());
+            m.setText(message.getText());
+
+            messagesDAOService.saveMassage(m);
+
+        });
 
         Optional.ofNullable(message.getEntities())
                 .orElse(Collections.emptyList()).stream()

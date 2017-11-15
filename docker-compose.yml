@@ -12,6 +12,16 @@ services:
       tstu_telegram_bot_network:
         ipv4_address: 172.36.0.2
 
+  telegram-db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: telebot
+      POSTGRES_PASSWORD: 123456
+    networks:
+          tstu_telegram_bot_network:
+            ipv4_address: 172.36.0.3
+
 networks:
   tstu_telegram_bot_network:
     driver: bridge
