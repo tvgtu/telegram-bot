@@ -4,6 +4,8 @@ services:
   telegram-bot:
     build: ./
     restart: always
+    depends_on:
+      - "telegram-db"
     environment:
       TELEGRAM_BOT_TOKEN:
       TELEGRAM_BOT_USERNAME:
@@ -19,8 +21,20 @@ services:
       POSTGRES_USER: telebot
       POSTGRES_PASSWORD: 123456
     networks:
-          tstu_telegram_bot_network:
-            ipv4_address: 172.36.0.3
+      tstu_telegram_bot_network:
+        ipv4_address: 172.36.0.3
+
+  telegram-admin:
+      image: tvgtu/telegram-bot-admin:snapshot-0.0.1
+      restart: always
+      depends_on:
+        - "telegram-db"
+        - "telegram-bot"
+      ports:
+        - 8090:8090
+      networks:
+        tstu_telegram_bot_network:
+          ipv4_address: 172.36.0.4
 
 networks:
   tstu_telegram_bot_network:
